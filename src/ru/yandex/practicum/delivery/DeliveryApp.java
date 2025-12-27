@@ -8,6 +8,7 @@ public class DeliveryApp {
 
     private static final Scanner scanner = new Scanner(System.in);
     private static List<Parcel> allParcels = new ArrayList<>();
+    private static List<FragileParcel> fragileParcels = new ArrayList<>();
 
     public static void main(String[] args) {
         boolean running = true;
@@ -25,6 +26,9 @@ public class DeliveryApp {
                 case 3:
                     calculateCosts();
                     break;
+                case 4:
+                    reportStatus();
+                    break;
                 case 0:
                     running = false;
                     break;
@@ -39,10 +43,9 @@ public class DeliveryApp {
         System.out.println("1 — Добавить посылку");
         System.out.println("2 — Отправить все посылки");
         System.out.println("3 — Посчитать стоимость доставки");
+        System.out.println("4 — Отследить хрупкие посылки");
         System.out.println("0 — Завершить");
     }
-
-    // реализуйте методы ниже
 
     private static void addParcel() {
         System.out.println("Введите вес посылки");
@@ -54,32 +57,32 @@ public class DeliveryApp {
         System.out.println("Введите день отправки");
         int sendDay = Integer.parseInt(scanner.nextLine());
 
+        System.out.println("Добавьте описание");
+        String description = scanner.nextLine();
+
         System.out.println("Выберите тип посылки");
         System.out.println("1 — обычная");
         System.out.println("2 — скоропортящаяся");
         System.out.println("3 — хрупкая");
 
-        Parcel parcel;
-        String description;
         int type = Integer.parseInt(scanner.nextLine());
+        Parcel parcel;
 
         switch (type) {
             case 1:
-                description = "обычная";
                 parcel = new StandardParcel(description, weight, deliveryAddress, sendDay);
                 allParcels.add(parcel);
                 break;
             case 2:
-                description = "скоропортящаяся";
                 System.out.println("Введите срок годности");
                 int timeToLive = Integer.parseInt(scanner.nextLine());
                 parcel = new PerishableParcel(description, weight, deliveryAddress, sendDay, timeToLive);
                 allParcels.add(parcel);
                 break;
             case 3:
-                description = "хрупкая";
                 parcel = new FragileParcel(description, weight, deliveryAddress, sendDay);
                 allParcels.add(parcel);
+                fragileParcels.add((FragileParcel) parcel);
                 break;
             default:
                 System.out.println("Неверный выбор.");
@@ -99,6 +102,13 @@ public class DeliveryApp {
             sum += parcel.calculateDeliveryCost();
         }
         System.out.println("Сумма доставки = " + sum + " руб.");
+    }
+
+    private static void reportStatus() {
+        for (FragileParcel fragileParcel : fragileParcels) {
+            System.out.println("Введите местоположение посылки " + fragileParcel.getDescription());
+            fragileParcel.reportStatus(scanner.nextLine());
+        }
     }
 
 }

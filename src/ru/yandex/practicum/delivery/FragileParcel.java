@@ -2,6 +2,7 @@ package ru.yandex.practicum.delivery;
 
 public class FragileParcel extends Parcel implements Trackable {
     public static final int FRAGILE_PRICE = 4;
+
     public FragileParcel(String description, int weight, String deliveryAddress, int sendDay) {
         super(description, weight, deliveryAddress, sendDay);
     }
